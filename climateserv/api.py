@@ -512,6 +512,8 @@ def request_data(data_set_type,
                 print_me("Could not get download link to write to the console... Exiting...")
                 print_me(str(e2))
                 return
+    elif str(config_obj['outfile']) == "memory_object":
+        return job_data[0]['JobReturnData']['JobData_ServerResponse_JSON']
     else:
         try:
             print_me("Attempting to write CSV Data to: " + str(config_obj['outfile']))

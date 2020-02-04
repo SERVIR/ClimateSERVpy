@@ -52,7 +52,7 @@ you can install using pip:
     
 # Sample Usage
 
-This is sample code to produce a time series csv using the CentralAsia_eModis dataset.  If you were to choose the OperationType of Download you would need to change the Outfile from .csv to .zip
+This is sample code to produce a time series csv using the CentralAsia_eModis dataset.  If you were to choose the OperationType of Download you would need to change the Outfile from .csv to .zip If you would like the data returned as a json object to a variable set Outfile to 'memory_object' and create a variable to hold the return from the climateserv.api.request_data call. 
 <pre>
 import climateserv.api
 
