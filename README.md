@@ -66,8 +66,8 @@ DatasetType = 'CentralAsia_eMODIS'
 OperationType = 'Average'
 EarliestDate = '01/03/2018'
 LatestDate = '03/16/2018'
-SeasonalEnsemble = 'ens07'
-SeasonalVariable = 'Precipitation'
+SeasonalEnsemble = '' # only used for Seasonal_Forecast
+SeasonalVariable = '' # only used for Seasonal_Forecast
 Outfile = 'out.csv'
 
 climateserv.api.request_data(DatasetType, OperationType, 

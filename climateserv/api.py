@@ -128,7 +128,6 @@ def get_request_url(base_url, datatype, interval_type, operation_type, begin_tim
         print_me("Error Creating and encoding geometry_String parameter" + str(err))
         ret_url += "&geometry=" + str(geometry_json.replace(" ", ""))
         pass
-    print(ret_url)
     return ret_url
 
 
@@ -182,7 +181,6 @@ def return_error_message(base_url, dataset_type, operation_type, earliest_date, 
     print_me("  SeasonalEnsemble : " + str(seasonal_ensemble))
     print_me("  SeasonalVariable : " + str(seasonal_variable))
     print_me("  GeometryCoords : " + str(geometry_coords))
-
     return {}
 
 
@@ -211,11 +209,10 @@ def check_job_progress(job_id, base_url):
 def get_job_cycle_progress(job_id, base_url):
     is_in_cycle = True
     cycle_complete_count = 0
-    job_status = "unset"  # "inprogress", "complete", "error_generic", "error_timeout"
+    job_status = "unset"
     num_of_cycles_to_try = 1800
 
     while is_in_cycle:
-
         # get Job Progress value
         current_job_progress = check_job_progress(job_id, base_url)
         print_me("Current Job Progress: " + str(current_job_progress) + ".  JobID: " + str(job_id))
@@ -229,7 +226,7 @@ def get_job_cycle_progress(job_id, base_url):
             job_status = "error_generic"
             is_in_cycle = False
         else:
-            job_status = "inprogress"
+            job_status = "in_progress"
             is_in_cycle = True
 
         # Should we bail out of this loop?
@@ -330,6 +327,7 @@ def process_job_controller(base_url, dataset_type, operation_type, earliest_date
             "Case Sensitive)")
         print_me(" To help you debug, Some of the parameters used for this job were: ")
         print_me("  OperationType : " + str(operation_type))
+        return -1
         return -1
 
     # Submit the new job request
