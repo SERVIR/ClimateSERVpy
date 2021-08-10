@@ -11,7 +11,7 @@ you can install using pip:
         * Min
         * Max
 * Download Zip file of tifs
-    * Variable
+    * Variables
         * Download
 
 
