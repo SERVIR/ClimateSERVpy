@@ -103,7 +103,7 @@ climateserv.api.request_data(DatasetType, OperationType,
 ## License and Distribution
 
 ClimateSERVpy is distributed by SERVIR under the terms of the MIT License. See
-[LICENSE](https://github.com/SERVIR/ClimateSERV2/blob/master/LICENSE) in this directory for more information.
+[LICENSE](https://github.com/SERVIR/ClimateSERVpy/blob/master/LICENSE) in this directory for more information.
 
 ## Privacy & Terms of Use
 
