@@ -1,6 +1,11 @@
 # ClimateServ API Access
 
-This is a simple package to access the [ClimateSERV API](https://climateserv.servirglobal.net/) 
+
+[![Python: 3.7](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![SERVIR: Global](https://img.shields.io/badge/SERVIR-Global-green)](https://servirglobal.net)
+
+This is a python package to access the [ClimateSERV API](https://climateserv.servirglobal.net/) 
 you can install using pip:
 * pip install climateserv
 
@@ -93,3 +98,14 @@ climateserv.api.request_data(DatasetType, OperationType,
              EarliestDate, LatestDate,GeometryCoords, 
              SeasonalEnsemble, SeasonalVariable,Outfile)
 </pre>
+
+
+## License and Distribution
+
+ClimateSERVpy is distributed by SERVIR under the terms of the MIT License. See
+[LICENSE](https://github.com/SERVIR/ClimateSERV2/blob/master/LICENSE) in this directory for more information.
+
+## Privacy & Terms of Use
+
+ClimateSERVpy abides to all of SERVIR's privacy and terms of use as described
+at [https://servirglobal.net/Privacy-Terms-of-Use](https://servirglobal.net/Privacy-Terms-of-Use).
