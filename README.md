@@ -56,6 +56,18 @@ you can install using pip:
         * Variable: ESI_4
     * ESI 12 week
         * Variable: ESI_12
+* NASA-USDA Enhanced SMAP Global Soil Moisture Data
+    * Soil moisture profile
+      * Variable: USDA_SMAP
+    * Surface soil moisture
+      * Variable: USDA_SSM
+    * Surface soil moisture anomaly
+        * Variable: USDA_SSMA
+    * Subsurface soil moisture
+        * Variable: USDA_SSSM
+    * Subsurface soil moisture anomaly
+        * Variable: USDA_SSSMA
+
     
 # Sample Usage
 
