@@ -13,6 +13,9 @@ you can install using pip:
 * Download Zip file of tifs
     * Variable
         * Download
+* Download Zip file containing a NetCDF
+    * Variable
+        * NetCDF
 
 
 ## Current supported datasets:
@@ -25,10 +28,9 @@ you can install using pip:
         * Precipitation 
             * Mean
                 * Variable: CHIRPS_GEFS_precip_mean
-            * 25th percentile
-                * Variable: CHIRPS_GEFS_precip_25
-            * 75th percentile
-                * Variable: CHIRPS_GEFS_precip_75
+* CHIRP
+    * Rainfall
+        * Variable: CHIRP
 * eMODIS
     * Central Asia NDVI
         * Variable: CentralAsia_eMODIS
@@ -39,11 +41,16 @@ you can install using pip:
     * West Africa NDVI
         * Variable: WestAfrica_eMODIS
 * Seasonal_Forecast
-    * Variable: Seasonal_Forecast
+    * Variable: CCSM4
         * SeasonalEnsemble Variable: ens01 thru ens10
         * seasonal_variable: Temperature or Precipitation
-* IMERG 1 Day
+  * Variable: CFSV2
+      * SeasonalEnsemble Variable: ens01 thru ens24
+      * seasonal_variable: Temperature or Precipitation
+* IMERG 1 Day (late)
     * Variable: IMERG
+* IMERG 1 Day (early)
+    * Variable: IMERG_early
 * Evaporative Stress Index
     * ESI 4 week
         * Variable: ESI_4

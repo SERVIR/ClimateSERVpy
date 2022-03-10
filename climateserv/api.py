@@ -19,23 +19,13 @@ def print_me(message):
 def get_dataset_id(datasettype, seasonal_ensemble, seasonal_variable):
     if datasettype == "CHIRPS":
         return 0
-    if datasettype == "CHIRPS_GEFS_anom":
-        return 31
-    if datasettype == "CHIRPS_GEFS_precip_mean":
-        return 32
-    if datasettype == "CHIRPS_GEFS_precip_25":
-        return 35
-    if datasettype == "CHIRPS_GEFS_precip_75":
-        return 36
     if datasettype == "WestAfrica_eMODIS":
         return 1
     if datasettype == "EastAfrica_eMODIS":
         return 2
     if datasettype == "SouthAfrica_eMODIS":
         return 5
-    if datasettype == "CentralAsia_eMODIS":
-        return 28
-    if datasettype == "Seasonal_Forecast":
+    if datasettype == "Seasonal_Forecast" or datasettype == "CCSM4":
         if seasonal_ensemble == "ens01":
             if seasonal_variable == "Temperature":
                 return 6
@@ -88,10 +78,158 @@ def get_dataset_id(datasettype, seasonal_ensemble, seasonal_variable):
                 return 25
     if datasettype == "IMERG":
         return 26
+    if datasettype == "CentralAsia_eMODIS":
+        return 28
     if datasettype == "ESI_4":
         return 29
+    if datasettype == "CHIRPS_GEFS_anom":
+        return 31
+    if datasettype == "CHIRPS_GEFS_precip_mean":
+        return 32
     if datasettype == "ESI_12":
         return 33
+    if datasettype == "CHIRPS_GEFS_precip_25":
+        return 35
+    if datasettype == "CHIRPS_GEFS_precip_75":
+        return 36
+    if datasettype == "USDA_SMAP":
+        return 37
+    if datasettype == "USDA_SSM":
+        return 38
+    if datasettype == "USDA_SSMA":
+        return 39
+    if datasettype == "USDA_SSSM":
+        return 40
+    if datasettype == "USDA_SSSMA":
+        return 41
+    if datasettype == "CFSV2":
+        if seasonal_ensemble == "ens01":
+            if seasonal_variable == "Temperature":
+                return 42
+            if seasonal_variable == "Precipitation":
+                return 43
+        if seasonal_ensemble == "ens02":
+            if seasonal_variable == "Temperature":
+                return 44
+            if seasonal_variable == "Precipitation":
+                return 45
+        if seasonal_ensemble == "ens03":
+            if seasonal_variable == "Temperature":
+                return 46
+            if seasonal_variable == "Precipitation":
+                return 47
+        if seasonal_ensemble == "ens04":
+            if seasonal_variable == "Temperature":
+                return 48
+            if seasonal_variable == "Precipitation":
+                return 49
+        if seasonal_ensemble == "ens05":
+            if seasonal_variable == "Temperature":
+                return 50
+            if seasonal_variable == "Precipitation":
+                return 51
+        if seasonal_ensemble == "ens06":
+            if seasonal_variable == "Temperature":
+                return 52
+            if seasonal_variable == "Precipitation":
+                return 53
+        if seasonal_ensemble == "ens07":
+            if seasonal_variable == "Temperature":
+                return 54
+            if seasonal_variable == "Precipitation":
+                return 55
+        if seasonal_ensemble == "ens08":
+            if seasonal_variable == "Temperature":
+                return 56
+            if seasonal_variable == "Precipitation":
+                return 57
+        if seasonal_ensemble == "ens09":
+            if seasonal_variable == "Temperature":
+                return 58
+            if seasonal_variable == "Precipitation":
+                return 59
+        if seasonal_ensemble == "ens10":
+            if seasonal_variable == "Temperature":
+                return 60
+            if seasonal_variable == "Precipitation":
+                return 61
+        if seasonal_ensemble == "ens11":
+            if seasonal_variable == "Temperature":
+                return 62
+            if seasonal_variable == "Precipitation":
+                return 63
+        if seasonal_ensemble == "ens12":
+            if seasonal_variable == "Temperature":
+                return 64
+            if seasonal_variable == "Precipitation":
+                return 65
+        if seasonal_ensemble == "ens13":
+            if seasonal_variable == "Temperature":
+                return 66
+            if seasonal_variable == "Precipitation":
+                return 67
+        if seasonal_ensemble == "ens14":
+            if seasonal_variable == "Temperature":
+                return 68
+            if seasonal_variable == "Precipitation":
+                return 69
+        if seasonal_ensemble == "ens15":
+            if seasonal_variable == "Temperature":
+                return 70
+            if seasonal_variable == "Precipitation":
+                return 71
+        if seasonal_ensemble == "ens16":
+            if seasonal_variable == "Temperature":
+                return 72
+            if seasonal_variable == "Precipitation":
+                return 73
+        if seasonal_ensemble == "ens17":
+            if seasonal_variable == "Temperature":
+                return 74
+            if seasonal_variable == "Precipitation":
+                return 75
+        if seasonal_ensemble == "ens18":
+            if seasonal_variable == "Temperature":
+                return 76
+            if seasonal_variable == "Precipitation":
+                return 77
+        if seasonal_ensemble == "ens19":
+            if seasonal_variable == "Temperature":
+                return 78
+            if seasonal_variable == "Precipitation":
+                return 79
+        if seasonal_ensemble == "ens20":
+            if seasonal_variable == "Temperature":
+                return 80
+            if seasonal_variable == "Precipitation":
+                return 81
+        if seasonal_ensemble == "ens21":
+            if seasonal_variable == "Temperature":
+                return 82
+            if seasonal_variable == "Precipitation":
+                return 83
+        if seasonal_ensemble == "ens22":
+            if seasonal_variable == "Temperature":
+                return 84
+            if seasonal_variable == "Precipitation":
+                return 85
+        if seasonal_ensemble == "ens23":
+            if seasonal_variable == "Temperature":
+                return 86
+            if seasonal_variable == "Precipitation":
+                return 87
+        if seasonal_ensemble == "ens24":
+            if seasonal_variable == "Temperature":
+                return 88
+            if seasonal_variable == "Precipitation":
+                return 89
+
+    if datasettype == "CHIRP":
+        return 90
+    if datasettype == "IMERG_early":
+        return 91
+
+
     # if we got this far, there was an issue looking up the dataset id
     return -1
 
@@ -105,6 +243,8 @@ def get_operation_id(operationtype):
         return 1
     if operationtype == "Download":
         return 6
+    if operationtype == "NetCDF":
+        return 7
     # if we got this far, there was an issue looking up the operation id
     return -1
 
@@ -334,6 +474,7 @@ def process_job_controller(base_url, dataset_type, operation_type, earliest_date
     submit_data_req_url = get_request_url(base_url, job_dataset_id, 0, job_operation_id, earliest_date,
                                           latest_date, geometry_coords)
 
+    print_me(submit_data_req_url)
     new_job_response = get_server_response(submit_data_req_url)
 
     if verify_response(new_job_response):
@@ -460,7 +601,7 @@ def request_data(data_set_type,
         'EarliestDate': str(earliest_date),
         'LatestDate': str(latest_date),
         'GeometryCoords': json.loads(str(geometry_coords)),
-        'BaseURL': 'https://climateserv.servirglobal.net/chirps/',
+        'BaseURL': 'https://climateserv.servirglobal.net/api/',
         'outfile': outfile
     }
     print_me("New Script Run")
