@@ -1,0 +1,32 @@
+package:
+  name: "climateserv"
+  version: "0.0.20"
+
+source:
+  git_rev: v0.0.18
+  git_url: https://github.com/SERVIR/ClimateSERVpy
+
+build:
+  number: 1
+  script: python setup.py install
+  noarch: python
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+
+python:
+  - 3.6
+about:
+  home: https://github.com/SERVIR/ClimateSERVpy
+  license: MIT
+  license_familY: MIT
+  license_file: LICENSE
+  summary: "This is a package to access the ClimateSERV API](https://climateserv.servirglobal.net/)"
+
+extra:
+  recipe-maintainers:
+    - SERVIR

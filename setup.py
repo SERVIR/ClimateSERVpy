@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="climateserv", # Replace with your own username
+    name="climateserv",  # Replace with your own username
     version="0.0.18",
     author="Billy Ashmall",
     author_email="billy.ashmall@nasa.gov",

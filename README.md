@@ -5,8 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![SERVIR: Global](https://img.shields.io/badge/SERVIR-Global-green)](https://servirglobal.net)
 
-This is a python package to access the [ClimateSERV API](https://climateserv.servirglobal.net/) 
-you can install using pip:
+This is a python package to access the [ClimateSERV API](https://climateserv.servirglobal.net/)
+you can install using conda or pip:
+* conda install -c servir climateserv
 * pip install climateserv
 
 ## Current supported operations:
