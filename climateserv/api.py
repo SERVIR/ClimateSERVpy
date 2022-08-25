@@ -5,6 +5,8 @@ import json
 import os
 import logging
 import csv
+import climateserv.request_utilities as request_utilities
+import requests
 
 
 def print_me(message):
@@ -14,266 +16,6 @@ def print_me(message):
     except Exception as e:
         print(str(e))
         pass
-
-
-def get_dataset_id(datasettype, seasonal_ensemble, seasonal_variable):
-    if datasettype == "CHIRPS":
-        return 0
-    if datasettype == "WestAfrica_eMODIS":
-        return 1
-    if datasettype == "EastAfrica_eMODIS":
-        return 2
-    if datasettype == "SouthAfrica_eMODIS":
-        return 5
-    if datasettype == "Seasonal_Forecast" or datasettype == "CCSM4":
-        if seasonal_ensemble == "ens01":
-            if seasonal_variable == "Temperature":
-                return 6
-            if seasonal_variable == "Precipitation":
-                return 7
-        if seasonal_ensemble == "ens02":
-            if seasonal_variable == "Temperature":
-                return 8
-            if seasonal_variable == "Precipitation":
-                return 9
-        if seasonal_ensemble == "ens03":
-            if seasonal_variable == "Temperature":
-                return 10
-            if seasonal_variable == "Precipitation":
-                return 11
-        if seasonal_ensemble == "ens04":
-            if seasonal_variable == "Temperature":
-                return 12
-            if seasonal_variable == "Precipitation":
-                return 13
-        if seasonal_ensemble == "ens05":
-            if seasonal_variable == "Temperature":
-                return 14
-            if seasonal_variable == "Precipitation":
-                return 15
-        if seasonal_ensemble == "ens06":
-            if seasonal_variable == "Temperature":
-                return 16
-            if seasonal_variable == "Precipitation":
-                return 17
-        if seasonal_ensemble == "ens07":
-            if seasonal_variable == "Temperature":
-                return 18
-            if seasonal_variable == "Precipitation":
-                return 19
-        if seasonal_ensemble == "ens08":
-            if seasonal_variable == "Temperature":
-                return 20
-            if seasonal_variable == "Precipitation":
-                return 21
-        if seasonal_ensemble == "ens09":
-            if seasonal_variable == "Temperature":
-                return 22
-            if seasonal_variable == "Precipitation":
-                return 23
-        if seasonal_ensemble == "ens10":
-            if seasonal_variable == "Temperature":
-                return 24
-            if seasonal_variable == "Precipitation":
-                return 25
-    if datasettype == "IMERG":
-        return 26
-    if datasettype == "CentralAsia_eMODIS":
-        return 28
-    if datasettype == "ESI_4":
-        return 29
-    if datasettype == "CHIRPS_GEFS_anom":
-        return 31
-    if datasettype == "CHIRPS_GEFS_precip_mean":
-        return 32
-    if datasettype == "ESI_12":
-        return 33
-    if datasettype == "CHIRPS_GEFS_precip_25":
-        return 35
-    if datasettype == "CHIRPS_GEFS_precip_75":
-        return 36
-    if datasettype == "USDA_SMAP":
-        return 37
-    if datasettype == "USDA_SSM":
-        return 38
-    if datasettype == "USDA_SSMA":
-        return 39
-    if datasettype == "USDA_SSSM":
-        return 40
-    if datasettype == "USDA_SSSMA":
-        return 41
-    if datasettype == "CFSV2":
-        if seasonal_ensemble == "ens01":
-            if seasonal_variable == "Temperature":
-                return 42
-            if seasonal_variable == "Precipitation":
-                return 43
-        if seasonal_ensemble == "ens02":
-            if seasonal_variable == "Temperature":
-                return 44
-            if seasonal_variable == "Precipitation":
-                return 45
-        if seasonal_ensemble == "ens03":
-            if seasonal_variable == "Temperature":
-                return 46
-            if seasonal_variable == "Precipitation":
-                return 47
-        if seasonal_ensemble == "ens04":
-            if seasonal_variable == "Temperature":
-                return 48
-            if seasonal_variable == "Precipitation":
-                return 49
-        if seasonal_ensemble == "ens05":
-            if seasonal_variable == "Temperature":
-                return 50
-            if seasonal_variable == "Precipitation":
-                return 51
-        if seasonal_ensemble == "ens06":
-            if seasonal_variable == "Temperature":
-                return 52
-            if seasonal_variable == "Precipitation":
-                return 53
-        if seasonal_ensemble == "ens07":
-            if seasonal_variable == "Temperature":
-                return 54
-            if seasonal_variable == "Precipitation":
-                return 55
-        if seasonal_ensemble == "ens08":
-            if seasonal_variable == "Temperature":
-                return 56
-            if seasonal_variable == "Precipitation":
-                return 57
-        if seasonal_ensemble == "ens09":
-            if seasonal_variable == "Temperature":
-                return 58
-            if seasonal_variable == "Precipitation":
-                return 59
-        if seasonal_ensemble == "ens10":
-            if seasonal_variable == "Temperature":
-                return 60
-            if seasonal_variable == "Precipitation":
-                return 61
-        if seasonal_ensemble == "ens11":
-            if seasonal_variable == "Temperature":
-                return 62
-            if seasonal_variable == "Precipitation":
-                return 63
-        if seasonal_ensemble == "ens12":
-            if seasonal_variable == "Temperature":
-                return 64
-            if seasonal_variable == "Precipitation":
-                return 65
-        if seasonal_ensemble == "ens13":
-            if seasonal_variable == "Temperature":
-                return 66
-            if seasonal_variable == "Precipitation":
-                return 67
-        if seasonal_ensemble == "ens14":
-            if seasonal_variable == "Temperature":
-                return 68
-            if seasonal_variable == "Precipitation":
-                return 69
-        if seasonal_ensemble == "ens15":
-            if seasonal_variable == "Temperature":
-                return 70
-            if seasonal_variable == "Precipitation":
-                return 71
-        if seasonal_ensemble == "ens16":
-            if seasonal_variable == "Temperature":
-                return 72
-            if seasonal_variable == "Precipitation":
-                return 73
-        if seasonal_ensemble == "ens17":
-            if seasonal_variable == "Temperature":
-                return 74
-            if seasonal_variable == "Precipitation":
-                return 75
-        if seasonal_ensemble == "ens18":
-            if seasonal_variable == "Temperature":
-                return 76
-            if seasonal_variable == "Precipitation":
-                return 77
-        if seasonal_ensemble == "ens19":
-            if seasonal_variable == "Temperature":
-                return 78
-            if seasonal_variable == "Precipitation":
-                return 79
-        if seasonal_ensemble == "ens20":
-            if seasonal_variable == "Temperature":
-                return 80
-            if seasonal_variable == "Precipitation":
-                return 81
-        if seasonal_ensemble == "ens21":
-            if seasonal_variable == "Temperature":
-                return 82
-            if seasonal_variable == "Precipitation":
-                return 83
-        if seasonal_ensemble == "ens22":
-            if seasonal_variable == "Temperature":
-                return 84
-            if seasonal_variable == "Precipitation":
-                return 85
-        if seasonal_ensemble == "ens23":
-            if seasonal_variable == "Temperature":
-                return 86
-            if seasonal_variable == "Precipitation":
-                return 87
-        if seasonal_ensemble == "ens24":
-            if seasonal_variable == "Temperature":
-                return 88
-            if seasonal_variable == "Precipitation":
-                return 89
-
-    if datasettype == "CHIRP":
-        return 90
-    if datasettype == "IMERG_early":
-        return 91
-
-
-    # if we got this far, there was an issue looking up the dataset id
-    return -1
-
-
-def get_operation_id(operationtype):
-    if operationtype == "Average":
-        return 5
-    if operationtype == "Max":
-        return 0
-    if operationtype == "Min":
-        return 1
-    if operationtype == "Download":
-        return 6
-    if operationtype == "NetCDF":
-        return 7
-    # if we got this far, there was an issue looking up the operation id
-    return -1
-
-
-def get_request_url(base_url, datatype, interval_type, operation_type, begin_time, end_time,
-                    geometry_coords_list):
-    ret_url = base_url + "submitDataRequest?a=1"
-    ret_url += "&cmd=submitDataRequest"
-    ret_url += "&datatype=" + str(datatype)
-    ret_url += "&intervaltype=" + str(interval_type)
-    ret_url += "&operationtype=" + str(operation_type)
-    ret_url += "&begintime=" + str(begin_time)
-    ret_url += "&endtime=" + str(end_time)
-    g_obj = {"type": "Polygon", "coordinates": []}
-    g_obj['coordinates'].append(geometry_coords_list)
-    geometry_json = json.dumps(g_obj)
-    try:
-        geometry_json_encoded = urllib.parse.quote(geometry_json.replace(" ", ""))
-        ret_url += "&geometry=" + str(geometry_json_encoded)
-    except Exception as err:
-        print_me("Error Creating and encoding geometry_String parameter" + str(err))
-        ret_url += "&geometry=" + str(geometry_json.replace(" ", ""))
-        pass
-    return ret_url
-
-
-def get_request_progress_url(base_url, job_id):
-    return base_url + 'getDataRequestProgress?a=2&id=' + str(job_id)
-
 
 def get_request_data_url(base_url, job_id):
     return base_url + "getDataFromRequest?a=3&id=" + str(job_id)
@@ -313,14 +55,14 @@ def return_error_message(base_url, dataset_type, operation_type, earliest_date, 
         "ClimateSERV Staff and be sure to send the a copy of this error message along with the parameters listed "
         "below.  Thank you!")
     print_me(" To help you debug, Some of the parameters used for this job were: ")
-    print_me("  BaseURL : " + str(base_url))
+    print_me("  base_url : " + str(base_url))
     print_me("  DatasetType : " + str(dataset_type))
     print_me("  OperationType : " + str(operation_type))
     print_me("  Earliest_Date : " + str(earliest_date))
     print_me("  Latest_Date : " + str(latest_date))
     print_me("  SeasonalEnsemble : " + str(seasonal_ensemble))
     print_me("  SeasonalVariable : " + str(seasonal_variable))
-    print_me("  GeometryCoords : " + str(geometry_coords))
+    # print_me("  GeometryCoords : " + str(geometry_coords))
     return {}
 
 
@@ -342,8 +84,10 @@ def get_job_progress_value(response):
 
 
 def check_job_progress(job_id, base_url):
-    server_response = get_server_response(get_request_progress_url(base_url, job_id))
-    return int(get_job_progress_value(server_response))
+    return int(get_job_progress_value(
+        get_server_response(
+            base_url + 'getDataRequestProgress?a=2&id=' + str(job_id))
+    ))
 
 
 def get_job_cycle_progress(job_id, base_url):
@@ -448,8 +192,8 @@ def get_csv_ready_processed_dataset(job_data, operation_type):
 
 def process_job_controller(base_url, dataset_type, operation_type, earliest_date, latest_date,
                            geometry_coords, seasonal_ensemble, seasonal_variable):
-    job_operation_id = get_operation_id(operation_type)
-    job_dataset_id = get_dataset_id(dataset_type, seasonal_ensemble, seasonal_variable)
+    job_operation_id = request_utilities.get_operation_id(operation_type)
+    job_dataset_id = request_utilities.get_dataset_id(dataset_type, seasonal_ensemble, seasonal_variable)
 
     # Validation
     if job_dataset_id == -1:
@@ -470,12 +214,29 @@ def process_job_controller(base_url, dataset_type, operation_type, earliest_date
         return -1
         return -1
 
-    # Submit the new job request
-    submit_data_req_url = get_request_url(base_url, job_dataset_id, 0, job_operation_id, earliest_date,
-                                          latest_date, geometry_coords)
 
-    print_me(submit_data_req_url)
-    new_job_response = get_server_response(submit_data_req_url)
+    g_obj = {"type": "Polygon", "coordinates": []}
+    g_obj['coordinates'].append(geometry_coords)
+    geometry_json = json.dumps(g_obj)
+    try:
+        geometry_json_encoded = str(geometry_json.replace(" ", ""))
+    except Exception as err:
+        print_me("Error Creating and encoding geometry_String parameter" + str(err))
+        geometry_json_encoded = str(geometry_json.replace(" ", ""))
+
+    url = base_url + "submitDataRequest/"
+    post_data = {
+        'datatype': str(job_dataset_id),
+        'intervaltype': 0,
+        'operationtype': job_operation_id,
+        'begintime': str(earliest_date),
+        'endtime': str(latest_date),
+        'geometry': geometry_json_encoded
+    }
+
+    x = requests.post(url, data=post_data, json=post_data)
+
+    new_job_response = json.loads(x.text)
 
     if verify_response(new_job_response):
         the_job_id = get_job_id_from_response(new_job_response)
@@ -484,7 +245,9 @@ def process_job_controller(base_url, dataset_type, operation_type, earliest_date
         if the_job_id == -1:
             print_me("Something went wrong submitting the job.  Waiting for a few seconds and trying one more time")
             time.sleep(3)
-            new_job_response = get_server_response(submit_data_req_url)
+            x = requests.post(url, data=post_data, json=post_data)
+            print(x.text)
+            new_job_response = json.loads(x.text)
             if verify_response(new_job_response):
                 the_job_id_second_try = get_job_id_from_response(new_job_response)
                 if the_job_id_second_try == -1:
@@ -503,8 +266,7 @@ def process_job_controller(base_url, dataset_type, operation_type, earliest_date
 
         # If it succeeded, get data
         if is_job_success:
-            get_job_data_req_url = get_request_data_url(base_url, the_job_id)
-            get_job_data_response = get_server_response(get_job_data_req_url)
+            get_job_data_response = get_server_response(base_url + "getDataFromRequest?a=3&id=" + str(the_job_id))
 
             csv_ready_data_obj, csv_header_list, failed_file_list = get_csv_ready_processed_dataset(
                 get_job_data_response, job_operation_id)
@@ -543,7 +305,7 @@ def process_requests(config_obj_list):
         print_me("About to process scripted job item now.")
 
         # Unpack current Config Item
-        base_url = config_obj['BaseURL']
+        base_url = config_obj['base_url']
         dataset_type = config_obj['DatasetType']
         operation_type = config_obj['OperationType']
         earliest_date = config_obj['EarliestDate']
@@ -593,7 +355,10 @@ def request_data(data_set_type,
                  latest_date, geometry_coords,
                  seasonal_ensemble, seasonal_variable,
                  outfile):
-    cserv_config = {
+    print_me("New Script Run")
+
+    # Make the request, get the data!
+    config_list = [{
         'DatasetType': str(data_set_type),
         'OperationType': str(operation_type),
         'SeasonalEnsemble': str(seasonal_ensemble),
@@ -601,21 +366,16 @@ def request_data(data_set_type,
         'EarliestDate': str(earliest_date),
         'LatestDate': str(latest_date),
         'GeometryCoords': json.loads(str(geometry_coords)),
-        'BaseURL': 'https://climateserv.servirglobal.net/api/',
+        'base_url': 'https://climateserv.servirglobal.net/api/',
         'outfile': outfile
-    }
-    print_me("New Script Run")
-
-    config_obj = cserv_config
-    # Make the request, get the data!
-    config_list = [config_obj]
+    }]
     job_data = process_requests(config_list)
 
     # Check Type (Is this a download job or a script job?)
-    if config_obj['OperationType'] == 'Download':
+    if config_list[0]['OperationType'] == 'Download':
         # Do the download stuff
         try:
-            local_file_name = config_obj['outfile']
+            local_file_name = config_list[0]['outfile']
 
             the_url = job_data[0]['JobReturnData']['downloadLink']
             the_job_id = job_data[0]['JobReturnData']['ServerJobID']
@@ -651,16 +411,16 @@ def request_data(data_set_type,
                 print_me("Could not get download link to write to the console... Exiting...")
                 print_me(str(e2))
                 return
-    elif str(config_obj['outfile']) == "memory_object":
+    elif str(config_list[0]['outfile']) == "memory_object":
         return job_data[0]['JobReturnData']['JobData_ServerResponse_JSON']
     else:
         try:
-            print_me("Attempting to write CSV Data to: " + str(config_obj['outfile']))
+            print_me("Attempting to write CSV Data to: " + str(config_list[0]['outfile']))
             job_header_info = ['JobID', job_data[0]['JobReturnData']['ServerJobID']]
             row_headings = job_data[0]['JobReturnData']['csvHeaderList']
             single_data_set = job_data[0]['JobReturnData']['csvWriteReady_DataObj']
 
-            my_csv_file_name = config_obj['outfile']
+            my_csv_file_name = config_list[0]['outfile']
 
             the_file = open(my_csv_file_name, 'a')
             f = csv.writer(the_file)
