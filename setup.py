@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="climateserv",  # Replace with your own username
-    version="0.0.21",
+    version="0.0.22",
     author="Billy Ashmall",
     author_email="billy.ashmall@nasa.gov",
     description="This is a package to access the ClimateSERV API](https://climateserv.servirglobal.net/) ",

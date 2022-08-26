@@ -2,7 +2,7 @@ python_version:
   - 3.6
 
 target_platform:
-  - OSX-64
+  - noarch
 
 numpy:
   - 1.16

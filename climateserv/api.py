@@ -17,6 +17,7 @@ def print_me(message):
         print(str(e))
         pass
 
+
 def get_request_data_url(base_url, job_id):
     return base_url + "getDataFromRequest?a=3&id=" + str(job_id)
 
@@ -27,10 +28,8 @@ def get_file_for_job_id_url(base_url, job_id):
 
 def get_server_response(the_url):
     try:
-        url_open_timeout = 30  # 30 Second timeout
         time.sleep(1)
-        response = urllib.request.urlopen(the_url, timeout=url_open_timeout)
-        return json.load(response)
+        return json.load(urllib.request.urlopen(the_url, timeout=30))
     except Exception as e:
         print_me(e)
 
@@ -46,23 +45,12 @@ def verify_response(response):
         return True
 
 
-def return_error_message(base_url, dataset_type, operation_type, earliest_date, latest_date, seasonal_ensemble,
-                         seasonal_variable, geometry_coords):
+def return_error_message():
     print_me("ERROR.  There was an error with this job.")
     print_me("(The error may have been caused by an error on the server.)")
     print_me(
-        "Double check the parameters listed below and try again.  If the error persists, please contact the "
-        "ClimateSERV Staff and be sure to send the a copy of this error message along with the parameters listed "
-        "below.  Thank you!")
-    print_me(" To help you debug, Some of the parameters used for this job were: ")
-    print_me("  base_url : " + str(base_url))
-    print_me("  DatasetType : " + str(dataset_type))
-    print_me("  OperationType : " + str(operation_type))
-    print_me("  Earliest_Date : " + str(earliest_date))
-    print_me("  Latest_Date : " + str(latest_date))
-    print_me("  SeasonalEnsemble : " + str(seasonal_ensemble))
-    print_me("  SeasonalVariable : " + str(seasonal_variable))
-    # print_me("  GeometryCoords : " + str(geometry_coords))
+        "Double check the parameters you set and try again.  If the error persists, please contact the "
+        "ClimateSERV Staff and be sure to send the parameters you used. Thank you!")
     return {}
 
 
@@ -95,6 +83,7 @@ def get_job_cycle_progress(job_id, base_url):
     cycle_complete_count = 0
     job_status = "unset"
     num_of_cycles_to_try = 1800
+    last_reported_progress = 0
 
     while is_in_cycle:
         # get Job Progress value
@@ -113,6 +102,10 @@ def get_job_cycle_progress(job_id, base_url):
             job_status = "in_progress"
             is_in_cycle = True
 
+        if current_job_progress > last_reported_progress:
+            # still processing, reset cycle_complete_count
+            last_reported_progress = current_job_progress
+            cycle_complete_count = 0
         # Should we bail out of this loop?
         if cycle_complete_count > num_of_cycles_to_try:
             job_status = "error_timeout"
@@ -190,33 +183,27 @@ def get_csv_ready_processed_dataset(job_data, operation_type):
     return ret_list, csv_header_string_list, file_failed_list
 
 
-def process_job_controller(base_url, dataset_type, operation_type, earliest_date, latest_date,
-                           geometry_coords, seasonal_ensemble, seasonal_variable):
-    job_operation_id = request_utilities.get_operation_id(operation_type)
-    job_dataset_id = request_utilities.get_dataset_id(dataset_type, seasonal_ensemble, seasonal_variable)
+def process_job_controller(config_obj):
+    job_operation_id = request_utilities.get_operation_id(config_obj['operation_type'])
+    job_dataset_id = request_utilities.get_dataset_id(config_obj['dataset_type'],
+                                                      config_obj['seasonal_ensemble'],
+                                                      config_obj['seasonal_variable'])
 
     # Validation
     if job_dataset_id == -1:
         print_me(
             "ERROR.  DatasetID not found.  Check your input params to ensure the DatasetType value is correct.  (Case "
-            "Sensitive)")
-        print_me(" To help you debug, Some of the parameters used for this job were: ")
-        print_me("  DatasetType : " + str(dataset_type))
-        print_me("  SeasonalEnsemble : " + str(seasonal_ensemble))
-        print_me("  SeasonalVariable : " + str(seasonal_variable))
+            "Sensitive), refer to the readme example at https://github.com/SERVIR/ClimateSERVpy")
+
         return -1
     if job_operation_id == -1:
         print_me(
             "ERROR.  OperationID not found.  Check your input params to ensure the OperationType value is correct.  ("
-            "Case Sensitive)")
-        print_me(" To help you debug, Some of the parameters used for this job were: ")
-        print_me("  OperationType : " + str(operation_type))
-        return -1
+            "Case Sensitive), refer to the readme example at https://github.com/SERVIR/ClimateSERVpy")
         return -1
 
-
-    g_obj = {"type": "Polygon", "coordinates": []}
-    g_obj['coordinates'].append(geometry_coords)
+    g_obj = {"type": "Polygon", "coordinates": [], "properties": {}}
+    g_obj['coordinates'].append(config_obj['geometry_coords'])
     geometry_json = json.dumps(g_obj)
     try:
         geometry_json_encoded = str(geometry_json.replace(" ", ""))
@@ -224,13 +211,13 @@ def process_job_controller(base_url, dataset_type, operation_type, earliest_date
         print_me("Error Creating and encoding geometry_String parameter" + str(err))
         geometry_json_encoded = str(geometry_json.replace(" ", ""))
 
-    url = base_url + "submitDataRequest/"
+    url = config_obj['base_url'] + "submitDataRequest/"
     post_data = {
         'datatype': str(job_dataset_id),
         'intervaltype': 0,
         'operationtype': job_operation_id,
-        'begintime': str(earliest_date),
-        'endtime': str(latest_date),
+        'begintime': str(config_obj['earliest_date']),
+        'endtime': str(config_obj['latest_date']),
         'geometry': geometry_json_encoded
     }
 
@@ -259,14 +246,15 @@ def process_job_controller(base_url, dataset_type, operation_type, earliest_date
         print_me("New Job Submitted to the Server: New JobID: " + str(the_job_id))
 
         # Enter the loop waiting on the progress.
-        is_job_success = get_job_cycle_progress(the_job_id, base_url)
+        is_job_success = get_job_cycle_progress(the_job_id, config_obj['base_url'])
 
         # Report Status to the user (console)
         print_me("Job, " + str(the_job_id) + " is done, did it succeed? : " + str(is_job_success))
 
         # If it succeeded, get data
         if is_job_success:
-            get_job_data_response = get_server_response(base_url + "getDataFromRequest?a=3&id=" + str(the_job_id))
+            get_job_data_response = get_server_response(
+                config_obj['base_url'] + "getDataFromRequest?a=3&id=" + str(the_job_id))
 
             csv_ready_data_obj, csv_header_list, failed_file_list = get_csv_ready_processed_dataset(
                 get_job_data_response, job_operation_id)
@@ -274,7 +262,7 @@ def process_job_controller(base_url, dataset_type, operation_type, earliest_date
             # If file download job, generate the file download link.
             download_link = "NA"
             if job_operation_id == 6:
-                download_link = get_file_for_job_id_url(base_url, the_job_id)
+                download_link = get_file_for_job_id_url(config_obj['base_url'], the_job_id)
 
             return {
                 "ServerJobID": the_job_id,
@@ -286,58 +274,38 @@ def process_job_controller(base_url, dataset_type, operation_type, earliest_date
             }
 
         else:
-            return_error_message(base_url, dataset_type, operation_type, earliest_date, latest_date, seasonal_ensemble,
-                                 seasonal_variable, geometry_coords)
+            return_error_message()
 
-        return_error_message(base_url, dataset_type, operation_type, earliest_date, latest_date, seasonal_ensemble,
-                             seasonal_variable, geometry_coords)
+        return_error_message()
     else:
-        return_error_message(base_url, dataset_type, operation_type, earliest_date, latest_date, seasonal_ensemble,
-                             seasonal_variable, geometry_coords)
+        return_error_message()
 
 
-def process_requests(config_obj_list):
-    script_job_count = 0
+def process_requests(config_obj):
     jobs_data_list = []
-    for config_obj in config_obj_list:
-        script_job_count += 1
 
-        print_me("About to process scripted job item now.")
+    print_me("About to process scripted job item now.")
+    try:
+        # Execute Job
+        current_job_return_data = process_job_controller(config_obj)
 
-        # Unpack current Config Item
-        base_url = config_obj['base_url']
-        dataset_type = config_obj['DatasetType']
-        operation_type = config_obj['OperationType']
-        earliest_date = config_obj['EarliestDate']
-        latest_date = config_obj['LatestDate']
-        geometry_coords = config_obj['GeometryCoords']
-        seasonal_ensemble = config_obj['SeasonalEnsemble']
-        seasonal_variable = config_obj['SeasonalVariable']
+        # Store Job Return Data along with original Config Item
 
-        try:
-            # Execute Job
-            current_job_return_data = process_job_controller(base_url, dataset_type, operation_type,
-                                                             earliest_date, latest_date, geometry_coords,
-                                                             seasonal_ensemble,
-                                                             seasonal_variable)
-
-            # Store Job Return Data along with original Config Item
-
-            jobs_data_list.append({
-                "JobReturnData": current_job_return_data,
-                "JobConfigData": config_obj
-            })
-        except Exception as e:
-            print_me(
-                "ERROR: Something went wrong!!       There and can mean that there is currently an issue with the "
-                "server.  Please try again later.  If the error persists, please contact the ClimateSERV staff.")
-            print_me("  This is a generic catch all error that could have multiple possible causes.")
-            print_me("     Possible causes may include:")
-            print_me("       Issues with your connection to the ClimateSERV server")
-            print_me("       Issues with your connection to the Internet")
-            print_me("       Invalid input parameters from the configuration file or command line")
-            print_me("       Interruptions of service with the ClimateSERV Service")
-            print_me(str(e))
+        jobs_data_list.append({
+            "JobReturnData": current_job_return_data,
+            "JobConfigData": config_obj
+        })
+    except Exception as e:
+        print_me(
+            "ERROR: Something went wrong!!       There and can mean that there is currently an issue with the "
+            "server.  Please try again later.  If the error persists, please contact the ClimateSERV staff.")
+        print_me("  This is a generic catch all error that could have multiple possible causes.")
+        print_me("     Possible causes may include:")
+        print_me("       Issues with your connection to the ClimateSERV server")
+        print_me("       Issues with your connection to the Internet")
+        print_me("       Invalid input parameters from the configuration file or command line")
+        print_me("       Interruptions of service with the ClimateSERV Service")
+        print_me(str(e))
 
     print_me("=======================================================")
     return jobs_data_list
@@ -358,24 +326,24 @@ def request_data(data_set_type,
     print_me("New Script Run")
 
     # Make the request, get the data!
-    config_list = [{
-        'DatasetType': str(data_set_type),
-        'OperationType': str(operation_type),
-        'SeasonalEnsemble': str(seasonal_ensemble),
-        'SeasonalVariable': str(seasonal_variable),
-        'EarliestDate': str(earliest_date),
-        'LatestDate': str(latest_date),
-        'GeometryCoords': json.loads(str(geometry_coords)),
+    request_config = {
+        'dataset_type': str(data_set_type),
+        'operation_type': str(operation_type),
+        'seasonal_ensemble': str(seasonal_ensemble),
+        'seasonal_variable': str(seasonal_variable),
+        'earliest_date': str(earliest_date),
+        'latest_date': str(latest_date),
+        'geometry_coords': json.loads(str(geometry_coords)),
         'base_url': 'https://climateserv.servirglobal.net/api/',
         'outfile': outfile
-    }]
-    job_data = process_requests(config_list)
+    }
+    job_data = process_requests(request_config)
 
     # Check Type (Is this a download job or a script job?)
-    if config_list[0]['OperationType'] == 'Download':
+    if request_config['operation_type'] == 'Download':
         # Do the download stuff
         try:
-            local_file_name = config_list[0]['outfile']
+            local_file_name = request_config['outfile']
 
             the_url = job_data[0]['JobReturnData']['downloadLink']
             the_job_id = job_data[0]['JobReturnData']['ServerJobID']
@@ -411,16 +379,16 @@ def request_data(data_set_type,
                 print_me("Could not get download link to write to the console... Exiting...")
                 print_me(str(e2))
                 return
-    elif str(config_list[0]['outfile']) == "memory_object":
+    elif str(request_config['outfile']) == "memory_object":
         return job_data[0]['JobReturnData']['JobData_ServerResponse_JSON']
     else:
         try:
-            print_me("Attempting to write CSV Data to: " + str(config_list[0]['outfile']))
+            print_me("Attempting to write CSV Data to: " + str(request_config['outfile']))
             job_header_info = ['JobID', job_data[0]['JobReturnData']['ServerJobID']]
             row_headings = job_data[0]['JobReturnData']['csvHeaderList']
             single_data_set = job_data[0]['JobReturnData']['csvWriteReady_DataObj']
 
-            my_csv_file_name = config_list[0]['outfile']
+            my_csv_file_name = request_config['outfile']
 
             the_file = open(my_csv_file_name, 'a')
             f = csv.writer(the_file)
