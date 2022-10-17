@@ -261,7 +261,7 @@ def process_job_controller(config_obj):
 
             # If file download job, generate the file download link.
             download_link = "NA"
-            if job_operation_id == 6:
+            if job_operation_id == 6 or job_operation_id == 7:
                 download_link = get_file_for_job_id_url(config_obj['base_url'], the_job_id)
 
             return {
@@ -340,7 +340,7 @@ def request_data(data_set_type,
     job_data = process_requests(request_config)
 
     # Check Type (Is this a download job or a script job?)
-    if request_config['operation_type'] == 'Download':
+    if request_config['operation_type'] == 'Download' or request_config['operation_type'] == 'NetCDF':
         # Do the download stuff
         try:
             local_file_name = request_config['outfile']
