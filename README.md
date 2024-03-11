@@ -25,54 +25,113 @@ you can install using conda or pip:
 
 
 ## Current supported datasets:
-* CHIRPS
-    * Rainfall
-        * Variable: CHIRPS
-    * GEFS
-        * Anomalies
-            * Variable: CHIRPS_GEFS_anom
-        * Precipitation 
-            * Mean
-                * Variable: CHIRPS_GEFS_precip_mean
-* CHIRP
-    * Rainfall
-        * Variable: CHIRP
-* eMODIS
-    * Central Asia NDVI
-        * Variable: CentralAsia_eMODIS
-    * East Africa NDVI
-        * Variable: EastAfrica_eMODIS
-    * Southern Africa NDVI
-        * Variable: SouthAfrica_eMODIS
-    * West Africa NDVI
-        * Variable: WestAfrica_eMODIS
-* Seasonal_Forecast
-    * Variable: CCSM4
-        * SeasonalEnsemble Variable: ens01 thru ens10
-        * seasonal_variable: Temperature or Precipitation
-  * Variable: CFSV2
-      * SeasonalEnsemble Variable: ens01 thru ens24
-      * seasonal_variable: Temperature or Precipitation
-* IMERG 1 Day (late)
-    * Variable: IMERG
-* IMERG 1 Day (early)
-    * Variable: IMERG_early
-* Evaporative Stress Index
-    * ESI 4 week
-        * Variable: ESI_4
-    * ESI 12 week
-        * Variable: ESI_12
-* NASA-USDA Enhanced SMAP Global Soil Moisture Data
-    * Soil moisture profile
-      * Variable: USDA_SMAP
-    * Surface soil moisture
-      * Variable: USDA_SSM
-    * Surface soil moisture anomaly
-        * Variable: USDA_SSMA
-    * Subsurface soil moisture
-        * Variable: USDA_SSSM
-    * Subsurface soil moisture anomaly
-        * Variable: USDA_SSSMA
+We are moving to the dataset numbers to match the way ClimateSERV handles the datasets.  We will continue to 
+support the prior named variables for the datasets, but recommend updating to use the integer values.  This will 
+allow any future datasets that are added to be accessed by their ID found on ClimateSERV even if this documentation 
+is not yet updated.  
+
+* UCSB CHIRPS Rainfall: 0
+* eMODIS West Africa NDVI: 1
+* eMODIS East Africa NDVI: 2
+* eMODIS Southern Africa NDVI: 5
+* IMERG 1 Day (late): 26
+* eMODIS Central Asia NDVI: 28
+* Evaporative Stress Index (ESI) 4 week: 29
+* CHIRPS GEFS Anomalies: 31
+* CHIRPS GEFS Precipitation: 32
+* Evaporative Stress Index (ESI) 12 week: 33
+* NASA-USDA Enhanced SMAP Global Soil moisture profile: 37
+* NASA-USDA Enhanced SMAP Global Surface soil moisture: 38
+* NASA-USDA Enhanced SMAP Global Surface soil moisture anomaly: 39
+* NASA-USDA Enhanced SMAP Global Subsurface soil moisture: 40
+* NASA-USDA Enhanced SMAP Global Subsurface soil moisture anomaly: 41
+* UCSB CHIRP Rainfall: 90
+* IMERG 1 Day (early): 91
+* NSIDC SMAP Sentinel 1Km: 541
+* NSIDC SMAP Sentinel 1Km 15 day: 542
+* LIS-modeled Evapotranspiration: 661
+* LIS-modeled Baseflow: 662
+* LIS-Modeled Runoff: 663
+* LIS-Modeled Soil Moisture 0-10cm: 664
+* LIS-Modeled Soil Moisture 10-40cm: 665
+* LIS-Modeled Soil Moisture 40-100cm: 666
+* LIS-Modeled Soil Moisture 100-200cm: 667
+
+
+NMME forecast datasets:
+
+## CCSM4
+* NMME ccsm4 ens01 Temperature: 6
+* NMME ccsm4 ens01 Precipitation: 7
+* NMME ccsm4 ens02 Temperature: 8
+* NMME ccsm4 ens02 Precipitation: 9
+* NMME ccsm4 ens03 Temperature: 10
+* NMME ccsm4 ens03 Precipitation: 11
+* NMME ccsm4 ens04 Temperature: 12
+* NMME ccsm4 ens04 Precipitation: 13
+* NMME ccsm4 ens05 Temperature: 14
+* NMME ccsm4 ens05 Precipitation: 15
+* NMME ccsm4 ens06 Temperature: 16
+* NMME ccsm4 ens06 Precipitation: 17
+* NMME ccsm4 ens07 Temperature: 18
+* NMME ccsm4 ens07 Precipitation: 19
+* NMME ccsm4 ens08 Temperature: 20
+* NMME ccsm4 ens08 Precipitation: 21
+* NMME ccsm4 ens09 Temperature: 22
+* NMME ccsm4 ens09 Precipitation: 23
+* NMME ccsm4 ens10 Temperature: 24
+* NMME ccsm4 ens10 Precipitation: 25
+
+## CSFV2
+* NMME cfsv2 ens01 Temperature: 42
+* NMME cfsv2 ens01 Precipitation: 43
+* NMME cfsv2 ens02 Temperature: 44
+* NMME cfsv2 ens02 Precipitation: 45
+* NMME cfsv2 ens03 Temperature: 46
+* NMME cfsv2 ens03 Precipitation: 47
+* NMME cfsv2 ens04 Temperature: 48
+* NMME cfsv2 ens04 Precipitation: 49
+* NMME cfsv2 ens05 Temperature: 50
+* NMME cfsv2 ens05 Precipitation: 51
+* NMME cfsv2 ens06 Temperature: 52
+* NMME cfsv2 ens06 Precipitation: 53
+* NMME cfsv2 ens07 Temperature: 54
+* NMME cfsv2 ens07 Precipitation: 55
+* NMME cfsv2 ens08 Temperature: 56
+* NMME cfsv2 ens08 Precipitation: 57
+* NMME cfsv2 ens09 Temperature: 58
+* NMME cfsv2 ens09 Precipitation: 59
+* NMME cfsv2 ens10 Temperature: 60
+* NMME cfsv2 ens10 Precipitation: 61
+* NMME cfsv2 ens11 Temperature: 62
+* NMME cfsv2 ens11 Precipitation: 63
+* NMME cfsv2 ens12 Temperature: 64
+* NMME cfsv2 ens12 Precipitation: 65
+* NMME cfsv2 ens13 Temperature: 66
+* NMME cfsv2 ens13 Precipitation: 67
+* NMME cfsv2 ens14 Temperature: 68
+* NMME cfsv2 ens14 Precipitation: 69
+* NMME cfsv2 ens15 Temperature: 70
+* NMME cfsv2 ens15 Precipitation: 71
+* NMME cfsv2 ens16 Temperature: 72
+* NMME cfsv2 ens16 Precipitation: 73
+* NMME cfsv2 ens17 Temperature: 74
+* NMME cfsv2 ens17 Precipitation: 75
+* NMME cfsv2 ens18 Temperature: 76
+* NMME cfsv2 ens18 Precipitation: 77
+* NMME cfsv2 ens19 Temperature: 78
+* NMME cfsv2 ens19 Precipitation: 79
+* NMME cfsv2 ens20 Temperature: 80
+* NMME cfsv2 ens20 Precipitation: 81
+* NMME cfsv2 ens21 Temperature: 82
+* NMME cfsv2 ens21 Precipitation: 83
+* NMME cfsv2 ens22 Temperature: 84
+* NMME cfsv2 ens22 Precipitation: 85
+* NMME cfsv2 ens23 Temperature: 86
+* NMME cfsv2 ens23 Precipitation: 87
+* NMME cfsv2 ens24 Temperature: 88
+* NMME cfsv2 ens24 Precipitation: 89
+
 
     
 # Sample Usage
@@ -87,12 +146,12 @@ y = 29.19
 GeometryCoords = [[x-.01,y+.01],[x+.01, y+.01],
                   [x+.01, y-.01],[x-.01,y-.01],[x-.01,y+.01]]
                   
-DatasetType = 'CentralAsia_eMODIS'
+DatasetType = 28
 OperationType = 'Average'
 EarliestDate = '01/03/2018'
 LatestDate = '03/16/2018'
-SeasonalEnsemble = '' # only used for Seasonal_Forecast
-SeasonalVariable = '' # only used for Seasonal_Forecast
+SeasonalEnsemble = '' # Leave empty when using the new integer dataset IDs
+SeasonalVariable = '' # Leave empty when using the new integer dataset IDs
 Outfile = 'out.csv'
 
 climateserv.api.request_data(DatasetType, OperationType, 

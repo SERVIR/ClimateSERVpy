@@ -183,9 +183,22 @@ def get_csv_ready_processed_dataset(job_data, operation_type):
     return ret_list, csv_header_string_list, file_failed_list
 
 
+def represents_int(s):
+    try:
+        int(s)
+    except ValueError:
+        return False
+    else:
+        return True
+
+
 def process_job_controller(config_obj):
     job_operation_id = request_utilities.get_operation_id(config_obj['operation_type'])
-    job_dataset_id = request_utilities.get_dataset_id(config_obj['dataset_type'],
+    dataset_type = config_obj['dataset_type']
+    if represents_int(dataset_type):
+        job_dataset_id = dataset_type
+    else:
+        job_dataset_id = request_utilities.get_dataset_id(config_obj['dataset_type'],
                                                       config_obj['seasonal_ensemble'],
                                                       config_obj['seasonal_variable'])
 
@@ -323,7 +336,7 @@ def request_data(data_set_type,
                  latest_date, geometry_coords,
                  seasonal_ensemble, seasonal_variable,
                  outfile):
-    print_me("New Script Run")
+    print_me("New Script Run variable")
 
     # Make the request, get the data!
     request_config = {
