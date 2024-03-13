@@ -7,18 +7,17 @@ source:
   git_url: https://github.com/SERVIR/ClimateSERVpy
 
 build:
-  number: 1
+  number: 2
   noarch: python
 
 requirements:
   build:
     - setuptools
+    - python
   run:
     - python
     - requests
-
-python:
-  - 3.8
+    - wheel
 
 about:
   home: https://github.com/SERVIR/ClimateSERVpy
@@ -33,5 +32,4 @@ extra:
 
 test:
   commands:
-    - python -m pip install .
     - pytest
