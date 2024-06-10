@@ -4,6 +4,7 @@
 [![Python: 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![SERVIR: Global](https://img.shields.io/badge/SERVIR-Global-green)](https://servirglobal.net)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11551070.svg)](https://doi.org/10.5281/zenodo.11551070)
 
 This is a python package to access the [ClimateSERV API](https://climateserv.servirglobal.net/)
 you can install using conda or pip:
