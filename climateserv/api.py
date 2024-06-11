@@ -18,14 +18,6 @@ def print_me(message):
         pass
 
 
-def get_request_data_url(base_url, job_id):
-    return base_url + "getDataFromRequest?a=3&id=" + str(job_id)
-
-
-def get_file_for_job_id_url(base_url, job_id):
-    return base_url + "getFileForJobID?a=4&id=" + str(job_id)
-
-
 def get_server_response(the_url):
     try:
         time.sleep(1)
@@ -275,7 +267,7 @@ def process_job_controller(config_obj):
             # If file download job, generate the file download link.
             download_link = "NA"
             if job_operation_id == 6 or job_operation_id == 7:
-                download_link = get_file_for_job_id_url(config_obj['base_url'], the_job_id)
+                download_link = config_obj['base_url'] + "getFileForJobID?a=4&id=" + str(the_job_id)
 
             return {
                 "ServerJobID": the_job_id,
@@ -403,7 +395,7 @@ def request_data(data_set_type,
 
             my_csv_file_name = request_config['outfile']
 
-            the_file = open(my_csv_file_name, 'a')
+            the_file = open(my_csv_file_name, 'a', newline='')
             f = csv.writer(the_file)
             f.writerow(job_header_info)
             f.writerow(row_headings)
