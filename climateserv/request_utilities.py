@@ -1,228 +1,76 @@
-def get_dataset_id(dataset_type, seasonal_ensemble, seasonal_variable):
-    if dataset_type == "CHIRPS":
-        return 0
-    if dataset_type == "WestAfrica_eMODIS":
-        return 1
-    if dataset_type == "EastAfrica_eMODIS":
-        return 2
-    if dataset_type == "SouthAfrica_eMODIS":
-        return 5
-    if dataset_type == "Seasonal_Forecast" or dataset_type == "CCSM4":
-        if seasonal_ensemble == "ens01":
-            if seasonal_variable == "Temperature":
-                return 6
-            if seasonal_variable == "Precipitation":
-                return 7
-        if seasonal_ensemble == "ens02":
-            if seasonal_variable == "Temperature":
-                return 8
-            if seasonal_variable == "Precipitation":
-                return 9
-        if seasonal_ensemble == "ens03":
-            if seasonal_variable == "Temperature":
-                return 10
-            if seasonal_variable == "Precipitation":
-                return 11
-        if seasonal_ensemble == "ens04":
-            if seasonal_variable == "Temperature":
-                return 12
-            if seasonal_variable == "Precipitation":
-                return 13
-        if seasonal_ensemble == "ens05":
-            if seasonal_variable == "Temperature":
-                return 14
-            if seasonal_variable == "Precipitation":
-                return 15
-        if seasonal_ensemble == "ens06":
-            if seasonal_variable == "Temperature":
-                return 16
-            if seasonal_variable == "Precipitation":
-                return 17
-        if seasonal_ensemble == "ens07":
-            if seasonal_variable == "Temperature":
-                return 18
-            if seasonal_variable == "Precipitation":
-                return 19
-        if seasonal_ensemble == "ens08":
-            if seasonal_variable == "Temperature":
-                return 20
-            if seasonal_variable == "Precipitation":
-                return 21
-        if seasonal_ensemble == "ens09":
-            if seasonal_variable == "Temperature":
-                return 22
-            if seasonal_variable == "Precipitation":
-                return 23
-        if seasonal_ensemble == "ens10":
-            if seasonal_variable == "Temperature":
-                return 24
-            if seasonal_variable == "Precipitation":
-                return 25
-    if dataset_type == "IMERG":
-        return 26
-    if dataset_type == "CentralAsia_eMODIS":
-        return 28
-    if dataset_type == "ESI_4":
-        return 29
-    if dataset_type == "CHIRPS_GEFS_anom":
-        return 31
-    if dataset_type == "CHIRPS_GEFS_precip_mean":
-        return 32
-    if dataset_type == "ESI_12":
-        return 33
-    if dataset_type == "CHIRPS_GEFS_precip_25":
-        return 35
-    if dataset_type == "CHIRPS_GEFS_precip_75":
-        return 36
-    if dataset_type == "USDA_SMAP":
-        return 37
-    if dataset_type == "USDA_SSM":
-        return 38
-    if dataset_type == "USDA_SSMA":
-        return 39
-    if dataset_type == "USDA_SSSM":
-        return 40
-    if dataset_type == "USDA_SSSMA":
-        return 41
-    if dataset_type == "CFSV2":
-        if seasonal_ensemble == "ens01":
-            if seasonal_variable == "Temperature":
-                return 42
-            if seasonal_variable == "Precipitation":
-                return 43
-        if seasonal_ensemble == "ens02":
-            if seasonal_variable == "Temperature":
-                return 44
-            if seasonal_variable == "Precipitation":
-                return 45
-        if seasonal_ensemble == "ens03":
-            if seasonal_variable == "Temperature":
-                return 46
-            if seasonal_variable == "Precipitation":
-                return 47
-        if seasonal_ensemble == "ens04":
-            if seasonal_variable == "Temperature":
-                return 48
-            if seasonal_variable == "Precipitation":
-                return 49
-        if seasonal_ensemble == "ens05":
-            if seasonal_variable == "Temperature":
-                return 50
-            if seasonal_variable == "Precipitation":
-                return 51
-        if seasonal_ensemble == "ens06":
-            if seasonal_variable == "Temperature":
-                return 52
-            if seasonal_variable == "Precipitation":
-                return 53
-        if seasonal_ensemble == "ens07":
-            if seasonal_variable == "Temperature":
-                return 54
-            if seasonal_variable == "Precipitation":
-                return 55
-        if seasonal_ensemble == "ens08":
-            if seasonal_variable == "Temperature":
-                return 56
-            if seasonal_variable == "Precipitation":
-                return 57
-        if seasonal_ensemble == "ens09":
-            if seasonal_variable == "Temperature":
-                return 58
-            if seasonal_variable == "Precipitation":
-                return 59
-        if seasonal_ensemble == "ens10":
-            if seasonal_variable == "Temperature":
-                return 60
-            if seasonal_variable == "Precipitation":
-                return 61
-        if seasonal_ensemble == "ens11":
-            if seasonal_variable == "Temperature":
-                return 62
-            if seasonal_variable == "Precipitation":
-                return 63
-        if seasonal_ensemble == "ens12":
-            if seasonal_variable == "Temperature":
-                return 64
-            if seasonal_variable == "Precipitation":
-                return 65
-        if seasonal_ensemble == "ens13":
-            if seasonal_variable == "Temperature":
-                return 66
-            if seasonal_variable == "Precipitation":
-                return 67
-        if seasonal_ensemble == "ens14":
-            if seasonal_variable == "Temperature":
-                return 68
-            if seasonal_variable == "Precipitation":
-                return 69
-        if seasonal_ensemble == "ens15":
-            if seasonal_variable == "Temperature":
-                return 70
-            if seasonal_variable == "Precipitation":
-                return 71
-        if seasonal_ensemble == "ens16":
-            if seasonal_variable == "Temperature":
-                return 72
-            if seasonal_variable == "Precipitation":
-                return 73
-        if seasonal_ensemble == "ens17":
-            if seasonal_variable == "Temperature":
-                return 74
-            if seasonal_variable == "Precipitation":
-                return 75
-        if seasonal_ensemble == "ens18":
-            if seasonal_variable == "Temperature":
-                return 76
-            if seasonal_variable == "Precipitation":
-                return 77
-        if seasonal_ensemble == "ens19":
-            if seasonal_variable == "Temperature":
-                return 78
-            if seasonal_variable == "Precipitation":
-                return 79
-        if seasonal_ensemble == "ens20":
-            if seasonal_variable == "Temperature":
-                return 80
-            if seasonal_variable == "Precipitation":
-                return 81
-        if seasonal_ensemble == "ens21":
-            if seasonal_variable == "Temperature":
-                return 82
-            if seasonal_variable == "Precipitation":
-                return 83
-        if seasonal_ensemble == "ens22":
-            if seasonal_variable == "Temperature":
-                return 84
-            if seasonal_variable == "Precipitation":
-                return 85
-        if seasonal_ensemble == "ens23":
-            if seasonal_variable == "Temperature":
-                return 86
-            if seasonal_variable == "Precipitation":
-                return 87
-        if seasonal_ensemble == "ens24":
-            if seasonal_variable == "Temperature":
-                return 88
-            if seasonal_variable == "Precipitation":
-                return 89
+def get_dataset_id(dataset_type, seasonal_ensemble=None, seasonal_variable=None):
+    # Mapping of non-seasonal datasets
+    dataset_ids = {
+        "CHIRPS": 0,
+        "WestAfrica_eMODIS": 1,
+        "EastAfrica_eMODIS": 2,
+        "SouthAfrica_eMODIS": 5,
+        "IMERG": 26,
+        "CentralAsia_eMODIS": 28,
+        "ESI_4": 29,
+        "CHIRPS_GEFS_anom": 31,
+        "CHIRPS_GEFS_precip_mean": 32,
+        "ESI_12": 33,
+        "CHIRPS_GEFS_precip_25": 35,
+        "CHIRPS_GEFS_precip_75": 36,
+        "USDA_SMAP": 37,
+        "USDA_SSM": 38,
+        "USDA_SSMA": 39,
+        "USDA_SSSM": 40,
+        "USDA_SSSMA": 41,
+        "CHIRP": 90,
+        "IMERG_early": 91
+    }
 
-    if dataset_type == "CHIRP":
-        return 90
-    if dataset_type == "IMERG_early":
-        return 91
+    # Mapping for seasonal datasets
+    seasonal_mapping = {
+        "ens01": {"Temperature": 6, "Precipitation": 7},
+        "ens02": {"Temperature": 8, "Precipitation": 9},
+        "ens03": {"Temperature": 10, "Precipitation": 11},
+        "ens04": {"Temperature": 12, "Precipitation": 13},
+        "ens05": {"Temperature": 14, "Precipitation": 15},
+        "ens06": {"Temperature": 16, "Precipitation": 17},
+        "ens07": {"Temperature": 18, "Precipitation": 19},
+        "ens08": {"Temperature": 20, "Precipitation": 21},
+        "ens09": {"Temperature": 22, "Precipitation": 23},
+        "ens10": {"Temperature": 24, "Precipitation": 25},
+        "ens11": {"Temperature": 62, "Precipitation": 63},
+        "ens12": {"Temperature": 64, "Precipitation": 65},
+        "ens13": {"Temperature": 66, "Precipitation": 67},
+        "ens14": {"Temperature": 68, "Precipitation": 69},
+        "ens15": {"Temperature": 70, "Precipitation": 71},
+        "ens16": {"Temperature": 72, "Precipitation": 73},
+        "ens17": {"Temperature": 74, "Precipitation": 75},
+        "ens18": {"Temperature": 76, "Precipitation": 77},
+        "ens19": {"Temperature": 78, "Precipitation": 79},
+        "ens20": {"Temperature": 80, "Precipitation": 81},
+        "ens21": {"Temperature": 82, "Precipitation": 83},
+        "ens22": {"Temperature": 84, "Precipitation": 85},
+        "ens23": {"Temperature": 86, "Precipitation": 87},
+        "ens24": {"Temperature": 88, "Precipitation": 89}
+    }
+
+    if dataset_type in dataset_ids:
+        return dataset_ids[dataset_type]
+
+    if dataset_type in ["Seasonal_Forecast", "CCSM4", "CFSV2"]:
+        if seasonal_ensemble in seasonal_mapping and seasonal_variable in seasonal_mapping[seasonal_ensemble]:
+            if dataset_type == "CFSV2" and seasonal_ensemble in [f"ens{i:02d}" for i in range(1, 11)]:
+                base_offset = 36
+            else:
+                base_offset = 0
+            return seasonal_mapping[seasonal_ensemble][seasonal_variable] + base_offset
+
     return -1
 
 
 def get_operation_id(operation_type):
-    if operation_type == "Average":
-        return 5
-    if operation_type == "Max":
-        return 0
-    if operation_type == "Min":
-        return 1
-    if operation_type == "Download":
-        return 6
-    if operation_type == "NetCDF":
-        return 7
-    # if we got this far, there was an issue looking up the operation id
-    return -1
+    operation_ids = {
+        "Average": 5,
+        "Max": 0,
+        "Min": 1,
+        "Download": 6,
+        "NetCDF": 7
+    }
+
+    return operation_ids.get(operation_type, -1)

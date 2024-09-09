@@ -18,105 +18,6 @@ def print_me(message):
         pass
 
 
-def get_server_response(the_url):
-    try:
-        time.sleep(1)
-        return json.load(urllib.request.urlopen(the_url, timeout=30))
-    except Exception as e:
-        print_me(e)
-
-
-def verify_response(response):
-    if 'errorMsg' in response:
-        error_message = response['errorMsg']
-        print_me("**** SERVER RESPONDED WITH AN ERROR ")
-        print_me("**** The server responded to your request with an error message.")
-        print_me("**** Error Message: " + error_message)
-        return False
-    else:
-        return True
-
-
-def return_error_message():
-    print_me("ERROR.  There was an error with this job.")
-    print_me("(The error may have been caused by an error on the server.)")
-    print_me(
-        "Double check the parameters you set and try again.  If the error persists, please contact the "
-        "ClimateSERV Staff and be sure to send the parameters you used. Thank you!")
-    return {}
-
-
-def get_job_id_from_response(response):
-    try:
-        return response[0]
-    except Exception as e:
-        print_me("get_ServerReturn_JobID_FromResponse: Something went wrong..Generic Catch All Error. " + str(e))
-        return -1
-
-
-def get_job_progress_value(response):
-    try:
-        return response[0]
-    except Exception as e:
-        # Something went wrong, Catch all
-        print_me("get_JobProgressValue_FromResponse: Something went wrong..Generic Catch All Error. " + str(e))
-        return -1.0  # Default, 'error' code for jobstatus
-
-
-def check_job_progress(job_id, base_url):
-    return int(get_job_progress_value(
-        get_server_response(
-            base_url + 'getDataRequestProgress?a=2&id=' + str(job_id))
-    ))
-
-
-def get_job_cycle_progress(job_id, base_url):
-    is_in_cycle = True
-    cycle_complete_count = 0
-    job_status = "unset"
-    num_of_cycles_to_try = 1800
-    last_reported_progress = 0
-
-    while is_in_cycle:
-        # get Job Progress value
-        current_job_progress = check_job_progress(job_id, base_url)
-        print_me("Current Job Progress: " + str(current_job_progress) + ".  JobID: " + str(job_id))
-        time.sleep(1)
-
-        # Process Job Status
-        if current_job_progress == 100:
-            job_status = "complete"
-            is_in_cycle = False
-        elif current_job_progress == -1:
-            job_status = "error_generic"
-            is_in_cycle = False
-        else:
-            job_status = "in_progress"
-            is_in_cycle = True
-
-        if current_job_progress > last_reported_progress:
-            # still processing, reset cycle_complete_count
-            last_reported_progress = current_job_progress
-            cycle_complete_count = 0
-        # Should we bail out of this loop?
-        if cycle_complete_count > num_of_cycles_to_try:
-            job_status = "error_timeout"
-            is_in_cycle = False
-
-        cycle_complete_count += 1
-
-        # For long wait times, echo the cycle
-        if cycle_complete_count % 50 == 0:
-            print_me("Still working.... Cycle: " + str(cycle_complete_count))
-
-    # Process return (did the job fail or succeed..)
-    print_me("Result of Job Status Cycle: " + str(job_status))
-    if job_status == "complete":
-        return True
-    else:
-        return False
-
-
 def sort_job_data(job_data):
     try:
         converted_epoch_times_list = job_data['data']
@@ -146,6 +47,8 @@ def get_csv_ready_processed_dataset(job_data, operation_type):
             value_key = "avg"
         if operation_type == 6:
             value_key = "FileGenerationSuccess"
+        if operation_type == 7:
+            value_key = "FileGenerationSuccess"
 
         csv_header_string_list.append(date_key)
         csv_header_string_list.append(value_key)
@@ -153,7 +56,7 @@ def get_csv_ready_processed_dataset(job_data, operation_type):
         for currentGranule in job_data['data']:
             current_date = "NULL"
             current_value = "NULL"
-            if not (operation_type == 6):
+            if not (operation_type == 6 or operation_type == 7):
                 # For non download types
                 current_date = str(currentGranule[date_key])
                 current_value = str(currentGranule['value'][value_key])
@@ -175,147 +78,6 @@ def get_csv_ready_processed_dataset(job_data, operation_type):
     return ret_list, csv_header_string_list, file_failed_list
 
 
-def represents_int(s):
-    try:
-        int(s)
-    except ValueError:
-        return False
-    else:
-        return True
-
-
-def process_job_controller(config_obj):
-    job_operation_id = request_utilities.get_operation_id(config_obj['operation_type'])
-    dataset_type = config_obj['dataset_type']
-    if represents_int(dataset_type):
-        job_dataset_id = dataset_type
-    else:
-        job_dataset_id = request_utilities.get_dataset_id(config_obj['dataset_type'],
-                                                      config_obj['seasonal_ensemble'],
-                                                      config_obj['seasonal_variable'])
-
-    # Validation
-    if job_dataset_id == -1:
-        print_me(
-            "ERROR.  DatasetID not found.  Check your input params to ensure the DatasetType value is correct.  (Case "
-            "Sensitive), refer to the readme example at https://github.com/SERVIR/ClimateSERVpy")
-
-        return -1
-    if job_operation_id == -1:
-        print_me(
-            "ERROR.  OperationID not found.  Check your input params to ensure the OperationType value is correct.  ("
-            "Case Sensitive), refer to the readme example at https://github.com/SERVIR/ClimateSERVpy")
-        return -1
-
-    g_obj = {"type": "Polygon", "coordinates": [], "properties": {}}
-    g_obj['coordinates'].append(config_obj['geometry_coords'])
-    geometry_json = json.dumps(g_obj)
-    try:
-        geometry_json_encoded = str(geometry_json.replace(" ", ""))
-    except Exception as err:
-        print_me("Error Creating and encoding geometry_String parameter" + str(err))
-        geometry_json_encoded = str(geometry_json.replace(" ", ""))
-
-    url = config_obj['base_url'] + "submitDataRequest/"
-    post_data = {
-        'datatype': str(job_dataset_id),
-        'intervaltype': 0,
-        'operationtype': job_operation_id,
-        'begintime': str(config_obj['earliest_date']),
-        'endtime': str(config_obj['latest_date']),
-        'geometry': geometry_json_encoded
-    }
-
-    x = requests.post(url, data=post_data, json=post_data)
-
-    new_job_response = json.loads(x.text)
-
-    if verify_response(new_job_response):
-        the_job_id = get_job_id_from_response(new_job_response)
-
-        # Validate the JobID
-        if the_job_id == -1:
-            print_me("Something went wrong submitting the job.  Waiting for a few seconds and trying one more time")
-            time.sleep(3)
-            x = requests.post(url, data=post_data, json=post_data)
-            print(x.text)
-            new_job_response = json.loads(x.text)
-            if verify_response(new_job_response):
-                the_job_id_second_try = get_job_id_from_response(new_job_response)
-                if the_job_id_second_try == -1:
-                    print_me("Job Submission second failed attempt.  Bailing Out.")
-                    return {}
-                else:
-                    the_job_id = the_job_id_second_try
-
-        print_me("New Job Submitted to the Server: New JobID: " + str(the_job_id))
-
-        # Enter the loop waiting on the progress.
-        is_job_success = get_job_cycle_progress(the_job_id, config_obj['base_url'])
-
-        # Report Status to the user (console)
-        print_me("Job, " + str(the_job_id) + " is done, did it succeed? : " + str(is_job_success))
-
-        # If it succeeded, get data
-        if is_job_success:
-            get_job_data_response = get_server_response(
-                config_obj['base_url'] + "getDataFromRequest?a=3&id=" + str(the_job_id))
-
-            csv_ready_data_obj, csv_header_list, failed_file_list = get_csv_ready_processed_dataset(
-                get_job_data_response, job_operation_id)
-
-            # If file download job, generate the file download link.
-            download_link = "NA"
-            if job_operation_id == 6 or job_operation_id == 7:
-                download_link = config_obj['base_url'] + "getFileForJobID?a=4&id=" + str(the_job_id)
-
-            return {
-                "ServerJobID": the_job_id,
-                "JobData_ServerResponse_JSON": get_job_data_response,
-                "csvHeaderList": csv_header_list,
-                "csvWriteReady_DataObj": csv_ready_data_obj,
-                "downloadLink": download_link,
-                "rawData_FailedDatesList": failed_file_list
-            }
-
-        else:
-            return_error_message()
-
-        return_error_message()
-    else:
-        return_error_message()
-
-
-def process_requests(config_obj):
-    jobs_data_list = []
-
-    print_me("About to process scripted job item now.")
-    try:
-        # Execute Job
-        current_job_return_data = process_job_controller(config_obj)
-
-        # Store Job Return Data along with original Config Item
-
-        jobs_data_list.append({
-            "JobReturnData": current_job_return_data,
-            "JobConfigData": config_obj
-        })
-    except Exception as e:
-        print_me(
-            "ERROR: Something went wrong!!       There and can mean that there is currently an issue with the "
-            "server.  Please try again later.  If the error persists, please contact the ClimateSERV staff.")
-        print_me("  This is a generic catch all error that could have multiple possible causes.")
-        print_me("     Possible causes may include:")
-        print_me("       Issues with your connection to the ClimateSERV server")
-        print_me("       Issues with your connection to the Internet")
-        print_me("       Invalid input parameters from the configuration file or command line")
-        print_me("       Interruptions of service with the ClimateSERV Service")
-        print_me(str(e))
-
-    print_me("=======================================================")
-    return jobs_data_list
-
-
 def download_file(url_to_file, local_file_name):
     f = urllib.request.urlopen(url_to_file)
     print_me("Downloading file.  This may take a few minutes..")
@@ -328,94 +90,125 @@ def request_data(data_set_type,
                  latest_date, geometry_coords,
                  seasonal_ensemble, seasonal_variable,
                  outfile):
-    print_me("New Script Run variable")
+    print_me(f"New Script Run, Dataset: {data_set_type}")
 
-    # Make the request, get the data!
-    request_config = {
-        'dataset_type': str(data_set_type),
-        'operation_type': str(operation_type),
-        'seasonal_ensemble': str(seasonal_ensemble),
-        'seasonal_variable': str(seasonal_variable),
-        'earliest_date': str(earliest_date),
-        'latest_date': str(latest_date),
-        'geometry_coords': json.loads(str(geometry_coords)),
-        'base_url': 'https://climateserv.servirglobal.net/api/',
-        'outfile': outfile
+    base_url = "https://climateserv.servirglobal.net/api/"
+    submit_url = base_url + "submitDataRequest/"
+    progress_url = base_url + "getDataRequestProgress/"
+    data_url = base_url + "getDataFromRequest/"
+
+    g_obj = {"type": "Polygon", "coordinates": [], "properties": {}}
+    try:
+        g_obj['coordinates'].append(json.loads(str(geometry_coords)))
+        geometry_json = json.dumps(g_obj)
+        geometry_json_encoded = str(geometry_json.replace(" ", ""))
+    except Exception as err:
+        print_me("Error creating and encoding geometry_String parameter: " + str(err))
+        return
+
+    try:
+        operation = request_utilities.get_operation_id(operation_type)
+    except Exception as err:
+        print_me("Error getting operation ID: " + str(err))
+        return
+
+    params = {
+        "datatype": data_set_type,
+        'seasonal_ensemble': seasonal_ensemble,
+        'seasonal_variable': seasonal_variable,
+        "begintime": earliest_date,
+        "endtime": latest_date,
+        "intervaltype": 0,
+        "operationtype": operation,
+        "dateType_Category": "default",
+        "isZip_CurrentDataType": False,
+        "geometry": geometry_json_encoded
     }
-    job_data = process_requests(request_config)
 
-    # Check Type (Is this a download job or a script job?)
-    if request_config['operation_type'] == 'Download' or request_config['operation_type'] == 'NetCDF':
-        # Do the download stuff
+    try:
+        # Make the POST request to submit the data request
+        response = requests.post(submit_url, params=params)
+        response.raise_for_status()
+        request_id = json.loads(response.text)[0]  # Extract the request ID
+        print(f"Data request submitted. Request ID: {request_id}")
+    except Exception as err:
+        print_me(f"Error submitting data request: {str(err)}")
+        print_me(f"Response text: {response.text if response else 'No response'}")
+        return
+
+    # Check the progress of the data request
+    while True:
         try:
-            local_file_name = request_config['outfile']
+            progress_response = requests.get(progress_url, params={"id": request_id})
+            progress_response.raise_for_status()
+            progress = json.loads(progress_response.text)[0]
+        except Exception as err:
+            print_me(f"Error checking progress: {str(err)}")
+            break
 
-            the_url = job_data[0]['JobReturnData']['downloadLink']
-            the_job_id = job_data[0]['JobReturnData']['ServerJobID']
-            does_download_local_file_already_exist = os.path.isfile(local_file_name)
+        if progress == 100:  # Request is complete
+            print(f"Data request is complete.")
+            break
+        elif progress == -1:  # Error occurred
+            print(f"Error occurred while processing data request.")
+            return
+        else:
+            print_me(f"Progress: {str(progress)}")
 
+        time.sleep(1)  # Wait for 10 seconds before checking progress again
+
+    the_url = f"https://climateserv.servirglobal.net/api/getFileForJobID/?id={request_id}"
+    if operation in [6, 7]:
+        local_file_name = outfile
+        does_download_local_file_already_exist = os.path.isfile(local_file_name)
+
+        try:
             # Download the file (and create it)
             download_file(the_url, local_file_name)
-
-            print_me("Data for JobID: " + str(the_job_id) + " was downloaded to file: " + str(local_file_name))
+            print_me("Data for JobID: " + str(request_id) + " was downloaded to file: " + str(local_file_name))
 
             if does_download_local_file_already_exist:
                 print_me("WARNING: -outfile param: " + str(
-                    local_file_name) + " already exists.  Download may fail or file may be overwritten.")
+                    local_file_name) + " already exists. Download may fail or file may be overwritten.")
                 print_me("VERBOSE: If there is an issue with your file, try the download link below.")
-                print_me("   Download URL for JobID: " + str(the_job_id))
+                print_me("   Download URL for JobID: " + str(request_id))
                 print_me("     " + str(the_url))
                 print_me("Note, download links are only valid for a short time (a few days)")
-            print_me("Exiting...")
-            return
-        except Exception as e:
-            print_me("Failed to download the file, Attempting to write the download URL to the console. " + str(e))
-            try:
-                the_url = job_data[0]['JobReturnData']['downloadLink']
-                the_job_id = job_data[0]['JobReturnData']['ServerJobID']
-                print_me("Download URL for JobID: " + str(the_job_id))
-                print_me(str(the_url))
-                print_me(
-                    "Copy and paste this URL into your web browser to manually download the file.  It will be only be "
-                    "available for a few days!")
-                print_me("Exiting...")
-                return
-            except Exception as e2:
-                print_me("Could not get download link to write to the console... Exiting...")
-                print_me(str(e2))
-                return
-    elif str(request_config['outfile']) == "memory_object":
-        return job_data[0]['JobReturnData']['JobData_ServerResponse_JSON']
+        except Exception as err:
+            print_me(f"Error downloading file: {str(err)}")
+        print_me("Exiting...")
+        return
+
+    try:
+        data_response = requests.get(data_url, params={"id": request_id})
+        data_response.raise_for_status()
+        data_response_json = json.loads(data_response.text)
+    except Exception as err:
+        print_me(f"Error fetching data: {str(err)}")
+        return
+
+    if outfile == "memory_object":
+        return data_response_json
     else:
         try:
-            print_me("Attempting to write CSV Data to: " + str(request_config['outfile']))
-            job_header_info = ['JobID', job_data[0]['JobReturnData']['ServerJobID']]
-            row_headings = job_data[0]['JobReturnData']['csvHeaderList']
-            single_data_set = job_data[0]['JobReturnData']['csvWriteReady_DataObj']
+            print_me("Attempting to write CSV Data to: " + outfile)
+            single_data_set, row_headings, failed_file_list = get_csv_ready_processed_dataset(data_response_json,
+                                                                                              operation)
+            job_header_info = ['JobID', request_id]
 
-            my_csv_file_name = request_config['outfile']
+            with open(outfile, 'a', newline='') as the_file:
+                f = csv.writer(the_file)
+                f.writerow(job_header_info)
+                f.writerow(row_headings)
+                for row in single_data_set:
+                    f.writerow([row[row_headings[0]], row[row_headings[1]]])
 
-            the_file = open(my_csv_file_name, 'a', newline='')
-            f = csv.writer(the_file)
-            f.writerow(job_header_info)
-            f.writerow(row_headings)
-            for row in single_data_set:
-                f.writerow([
-                    row[row_headings[0]],
-                    row[row_headings[1]]
-                ])
-
-            the_file.close()
-            print_me("CSV Data Written to: " + str(my_csv_file_name))
+            print_me("CSV Data Written to: " + str(outfile))
             print_me("Exiting...")
-            print_me("")
             return
         except Exception as e:
-            print_me("Failed to create the CSV file output.  "
-                     "Attempting to write the CSV data to the console: " + str(e))
+            print_me("Failed to create the CSV file output. Attempting to write the CSV data to the console: " + str(e))
             try:
-                row_headings = job_data[0]['JobReturnData']['csvHeaderList']
-                single_data_set = job_data[0]['JobReturnData']['csvWriteReady_DataObj']
                 print_me("_CSV_DATA_START")
                 print_me("rowHeadings: " + str(row_headings))
                 print_me("singleDataSet: " + str(single_data_set))
@@ -425,5 +218,4 @@ def request_data(data_set_type,
             except Exception as e2:
                 print_me("Could not write CSV data to the console... " + str(e2))
                 print_me("Exiting...")
-                print_me("")
                 return
